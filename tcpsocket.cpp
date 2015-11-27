@@ -13,8 +13,17 @@ void TcpSocket::sendDatagram()
 {
     QByteArray data;
     p_gen.serializePacket(data);
-    qint64 b = socket->write(data);
-    qDebug() << "Bytes written:" << b;
+
+    if (socket->waitForConnected(5000)) {
+        while (true) {
+            qint64 b = socket->write(data);
+            qDebug() << "Bytes written:" << b;
+
+            if(!socket->waitForBytesWritten(5000)) {
+               break;
+            }
+        }
+    }
 }
 
 void TcpSocket::socketConnected()
