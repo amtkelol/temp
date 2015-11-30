@@ -7,20 +7,16 @@ TcpSocket::TcpSocket()
 
     connect(socket, SIGNAL(connected()), this, SLOT(socketConnected()));
     connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError()));
+    connect(socket, SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64)));
 }
 
 void TcpSocket::sendDatagram()
 {
-    QByteArray data;
-    p_gen.serializePacket(data);
-
-    while (true) {
-        qint64 b = socket->write(data);
-        qDebug() << "Bytes written:" << b;
-
-        if(!socket->waitForBytesWritten(5000)) {
-           break;
-        }
+    if (socket->state() == QAbstractSocket::ConnectedState) {
+        qDebug() << "sending data";
+        QByteArray data;
+        p_gen.serializePacket(data);
+        socket->write(data);
     }
 }
 
@@ -33,4 +29,10 @@ void TcpSocket::socketConnected()
 void TcpSocket::socketError()
 {
     qDebug() << socket->errorString();
+}
+
+void TcpSocket::bytesWritten(qint64 bytes)
+{
+    qDebug() << "bytes written:" << bytes;
+    QTimer::singleShot(5000, this, [this]() { sendDatagram(); });
 }

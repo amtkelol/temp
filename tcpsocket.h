@@ -14,6 +14,7 @@ public:
 public slots:
     void socketError();
     void socketConnected();
+    void bytesWritten(qint64 bytes);
 private:
     QTcpSocket *socket;
     PacketGenerator p_gen;
