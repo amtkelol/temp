@@ -18,6 +18,7 @@ public slots:
 private:
     QTcpSocket *socket;
     PacketGenerator p_gen;
+    QTimer *timer;
 };
 
 #endif // TCPSOCKET_H

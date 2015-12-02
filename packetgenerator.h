@@ -13,7 +13,6 @@ private:
         quint8 version;
         quint16 length;
         quint16 checksum;
-        quint8 data[32];
     };
 #pragma pack(pop)
 
