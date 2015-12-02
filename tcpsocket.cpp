@@ -12,7 +12,10 @@ TcpSocket::TcpSocket()
 
     connect(socket, SIGNAL(connected()), this, SLOT(socketConnected()));
     connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError()));
-    connect(socket, SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64)));
+    connect(socket, SIGNAL(bytesWritten(qint64)), this, SLOT(socketBytesWritten(qint64)));
+    connect(socket, &QTcpSocket::stateChanged, this, [this]() {
+        emit socketStateSignal(socket->state());
+    });
 }
 
 void TcpSocket::sendDatagram()
@@ -40,8 +43,9 @@ void TcpSocket::socketError()
     }
 }
 
-void TcpSocket::bytesWritten(qint64 bytes)
+void TcpSocket::socketBytesWritten(qint64 bytes)
 {
     qDebug() << "bytes written:" << bytes;
+    emit bytesWrittenSignal(bytes);
     timer->start();
 }

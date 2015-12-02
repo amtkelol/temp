@@ -1,11 +1,12 @@
-#include "tcpsocket.h"
-#include <QCoreApplication>
+#include "mainwindow.h"
+#include <QApplication>
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QApplication a(argc, argv);
 
-    TcpSocket s;
+    MainWindow w;
+    w.show();
 
     return a.exec();
 }

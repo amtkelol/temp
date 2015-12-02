@@ -4,17 +4,19 @@
 #include "packetgenerator.h"
 #include <QtNetwork>
 
-
 class TcpSocket : public QObject
 {
     Q_OBJECT
 public:
     TcpSocket();
     void sendDatagram();
-public slots:
+private slots:
     void socketError();
     void socketConnected();
-    void bytesWritten(qint64 bytes);
+    void socketBytesWritten(qint64 bytes);
+signals:
+    void bytesWrittenSignal(qint64 bytes);
+    void socketStateSignal(QAbstractSocket::SocketState);
 private:
     QTcpSocket *socket;
     PacketGenerator p_gen;

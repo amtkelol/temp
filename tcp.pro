@@ -1,5 +1,4 @@
-QT += core network
-QT -= gui
+QT += core gui network widgets
 
 TARGET = tcp
 CONFIG += console c++11
@@ -9,9 +8,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     packetgenerator.cpp \
-    tcpsocket.cpp
+    tcpsocket.cpp \
+    mainwindow.cpp
 
 HEADERS += \
     packetgenerator.h \
-    tcpsocket.h
+    tcpsocket.h \
+    mainwindow.h
+
+FORMS += \
+    mainwindow.ui
 
