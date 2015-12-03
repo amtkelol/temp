@@ -9,7 +9,8 @@ class TcpSocket : public QObject
     Q_OBJECT
 public:
     TcpSocket();
-    void sendDatagram();
+    void connectSocket(const QString &adress, quint16 port);
+    void disconnectSocket();
 private slots:
     void socketError();
     void socketConnected();
@@ -17,10 +18,12 @@ private slots:
 signals:
     void bytesWrittenSignal(qint64 bytes);
     void socketStateSignal(QAbstractSocket::SocketState);
+    void socketErrorSignal(QString err);
 private:
     QTcpSocket *socket;
     PacketGenerator p_gen;
     QTimer *timer;
+    void sendDatagram();
 };
 
 #endif // TCPSOCKET_H

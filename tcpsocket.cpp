@@ -2,8 +2,7 @@
 
 TcpSocket::TcpSocket()
 {
-    socket = new QTcpSocket(this);
-    socket->connectToHost("google.com", 80);
+    socket = new QTcpSocket();
 
     timer = new QTimer(this);
     timer->setInterval(5000);
@@ -16,6 +15,14 @@ TcpSocket::TcpSocket()
     connect(socket, &QTcpSocket::stateChanged, this, [this]() {
         emit socketStateSignal(socket->state());
     });
+    connect(socket, &QTcpSocket::disconnected, this, []() {
+        qDebug() << "disconnected";
+    });
+}
+
+void TcpSocket::connectSocket(const QString &adress, quint16 port)
+{
+    socket->connectToHost(adress, port);
 }
 
 void TcpSocket::sendDatagram()
@@ -29,6 +36,11 @@ void TcpSocket::sendDatagram()
     }
 }
 
+void TcpSocket::disconnectSocket()
+{
+    socket->disconnectFromHost();
+}
+
 void TcpSocket::socketConnected()
 {
     qDebug() << "connected";
@@ -38,6 +50,7 @@ void TcpSocket::socketConnected()
 void TcpSocket::socketError()
 {
     qDebug() << socket->errorString();
+    emit socketErrorSignal(socket->errorString());
     if (timer->isActive()) {
         timer->stop();
     }
